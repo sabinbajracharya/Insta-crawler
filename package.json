@@ -1,0 +1,22 @@
+{
+  "name": "insta-crawler",
+  "version": "1.0.0",
+  "description": "Crawl data from instagram",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sabin Bir Bajracharya",
+  "license": "ISC",
+  "engines": {
+    "node": "7.10.0",
+    "npm": "4.2.0"
+  },
+  "dependencies": {
+    "algoliasearch": "^3.24.3",
+    "dotenv": "^4.0.0",
+    "firebase-admin": "^5.2.1",
+    "request": "^2.82.0",
+    "request-promise": "^4.2.1"
+  }
+}
