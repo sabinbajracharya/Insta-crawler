@@ -1,8 +1,8 @@
 const dotenv = require('dotenv').load();
-const db = require('./database/firebase')
 const algolia = require('./algolia/algolia')
 const request = require('request-promise')
 const Post = require('./model/md-post')
+const { insertMany } = require('./database/insert')
 
 http({
   uri: 'https://www.instagram.com/graphql/query',
@@ -10,7 +10,7 @@ http({
     query_id: '17888483320059182',
     variables: JSON.stringify({
       id: '1814752244',
-      first: 2
+      first: 1000
     })
   },
   json: true
@@ -23,21 +23,40 @@ async function http (options = {}) {
     resolveWithFullResponse: true
   }
   const opts = Object.assign({}, defaults, options)
-  const res = await request(opts)
-  parse(res.body)
+  try {
+    const res = await request(opts)
+    const Posts = parse(res.body)
+    insertMany(Posts)
+  } catch (e) {
+    console.log("Error::", e)
+  }
+
 }
 
 function parse (json) {
   const Posts = []
-  const list = json['data']['user']['edge_owner_to_timeline_media']['edges']
+  const edges = json['data']['user']['edge_owner_to_timeline_media']['edges']
+  for (let i = edges.length - 1; i >= 0; i--) {
+    const edge = edges[i]
 
-  for (let i = list.length - 1; i >= 0; i--) {
-    const node = list[i].node
+    if (!("node" in  edge)) continue
+
+    const node = edge.node
+    const desc = node['edge_media_to_caption']['edges'][0]
+
+    if (desc === undefined) {
+      // No description for the post
+      console.log(node['edge_media_to_caption']['edges'])
+      continue
+    }
+
     const post = Post(
-      node['edge_media_to_caption']['edges'][0]['node']['text'],
+      desc['node']['text'],
       node['display_url']
     )
-    console.log('sabinpost', post)
+
     Posts.push(post)
   }
+
+  return Posts
 }

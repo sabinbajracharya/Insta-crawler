@@ -6,4 +6,4 @@ admin.initializeApp({
   databaseURL: process.env.FIREBASE_DATABASE_URL
 })
 
-module.exports = admin
+module.exports = admin.database()
