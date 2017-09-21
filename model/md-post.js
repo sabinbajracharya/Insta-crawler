@@ -1,6 +1,7 @@
 const Post = function (params) {
 
   const defaults = {
+    name: 'Customrus',
     desc: 'No Description', // description
     url: '', // post image url
     like_count: 0, // total like
@@ -32,6 +33,7 @@ const Post = function (params) {
   generateTagsFromHash();
 
   return {
+    name: opts.name,
     desc: opts.desc,
     display: opts.url,
     like: opts.like_count,
