@@ -5,7 +5,7 @@ const { parseProfile, parsePosts } = require('./utils/parser')
 const { insertMany, insertOne } = require('./database/insert')
 const { insertObjects } = require('./algolia/insert')
 
-const USERNAME = 'customrus'
+const USERNAME = 'shah_niti'
 const URL_PROFILE = `https://www.instagram.com/${USERNAME}/?__a=1`
 const URL_POSTS = 'https://www.instagram.com/graphql/query';
 
@@ -18,11 +18,11 @@ const URL_POSTS = 'https://www.instagram.com/graphql/query';
     })
     const Profile = await insertOne(parseProfile(resProfile))
     const resPosts = await http({
-      uri: 'https://www.instagram.com/graphql/query',
+      uri: URL_POSTS,
       qs: {
         query_id: '17888483320059182',
         variables: JSON.stringify({
-          id: '1814752244',
+          id: Profile.id,
           first: 100
         })
       },
