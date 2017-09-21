@@ -21,7 +21,7 @@ module.exports.insertObjects = async function (data) {
   });
 
   const output = await index.saveObjects(data)
-  console.log('### Aloglia ###')
+  console.log('### Algolia ###')
   console.log(output)
 }
 
