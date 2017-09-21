@@ -10,3 +10,16 @@ module.exports.insertMany = async function (data) {
   }
   return data //data returned with firebase key attached
 }
+
+module.exports.insertOne = async function (data) {
+  const postsRef = db.ref(`profile/${data.id}`)
+
+  try {
+    const result = await postsRef.set(data)
+    console.log('profile_key', 'Synchronization succeeded')
+  } catch (e) {
+    console.log('Synchronization failed');
+  }
+
+  return data
+}

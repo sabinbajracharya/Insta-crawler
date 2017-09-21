@@ -1,7 +1,9 @@
 const Post = function (params) {
 
   const defaults = {
-    name: 'Customrus',
+    name: '', // full name
+    username: '', // username
+    profile_display: '', // profile image
     desc: 'No Description', // description
     url: '', // post image url
     like_count: 0, // total like
@@ -34,6 +36,8 @@ const Post = function (params) {
 
   return {
     name: opts.name,
+    username: opts.username,
+    profile_display: opts.profile_display,
     desc: opts.desc,
     display: opts.url,
     like: opts.like_count,

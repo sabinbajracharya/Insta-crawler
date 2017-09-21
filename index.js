@@ -1,20 +1,44 @@
 const dotenv = require('dotenv').load();
 const request = require('request-promise')
-const Post = require('./model/md-post')
-const { insertMany } = require('./database/insert')
+
+const { parseProfile, parsePosts } = require('./utils/parser')
+const { insertMany, insertOne } = require('./database/insert')
 const { insertObjects } = require('./algolia/insert')
 
-http({
-  uri: 'https://www.instagram.com/graphql/query',
-  qs: {
-    query_id: '17888483320059182',
-    variables: JSON.stringify({
-      id: '1814752244',
-      first: 100
+const USERNAME = 'customrus'
+const URL_PROFILE = `https://www.instagram.com/${USERNAME}/?__a=1`
+const URL_POSTS = 'https://www.instagram.com/graphql/query';
+
+
++async function(profileUrl, postsUrl) {
+  try {
+    const resProfile = await http({
+      uri: URL_PROFILE,
+      json: true
     })
-  },
-  json: true
-})
+    const Profile = await insertOne(parseProfile(resProfile))
+    const resPosts = await http({
+      uri: 'https://www.instagram.com/graphql/query',
+      qs: {
+        query_id: '17888483320059182',
+        variables: JSON.stringify({
+          id: '1814752244',
+          first: 100
+        })
+      },
+      json: true
+    })
+    resPosts['name'] = Profile.name
+    resPosts['username'] = Profile.username
+    resPosts['profile_display'] = Profile.display
+
+    const Posts = parsePosts(resPosts)
+    const postWithObjectIDs = await insertMany(Posts)
+    const alogliaResult = await insertObjects(postWithObjectIDs)
+  } catch (e) {
+    console.log("Error::", e)
+  }
+}(URL_PROFILE, URL_POSTS);
 
 async function http (options = {}) {
   const defaults = {
@@ -25,43 +49,8 @@ async function http (options = {}) {
   const opts = Object.assign({}, defaults, options)
   try {
     const res = await request(opts)
-    const Posts = parse(res.body)
-    const postWithObjectIDs = await insertMany(Posts)
-    const alogliaResult = await insertObjects(postWithObjectIDs)
+    return res.body
   } catch (e) {
     console.log("Error::", e)
   }
-
-}
-
-function parse (json) {
-  const Posts = []
-  const edges = json['data']['user']['edge_owner_to_timeline_media']['edges']
-  for (let i = edges.length - 1; i >= 0; i--) {
-    const edge = edges[i]
-
-    if (!("node" in  edge)) continue
-
-    const node = edge.node
-    const desc = node['edge_media_to_caption']['edges'][0]
-
-    if (desc === undefined) {
-      // No description for the post
-      console.log(node['edge_media_to_caption']['edges'])
-      continue
-    }
-
-    const post = Post({
-      desc: desc['node']['text'], // description
-      url: node['display_url'], // post image url
-      like_count: node['edge_media_preview_like']['count'], // total like
-      comment_count: node['edge_media_to_comment']['count'], // total comment
-      post_id: node['shortcode'], // link to actual post
-      profile_id: node['owner']['id'] // profile id
-    })
-
-    Posts.push(post)
-  }
-
-  return Posts
 }
