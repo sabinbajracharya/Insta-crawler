@@ -10,7 +10,7 @@ http({
     query_id: '17888483320059182',
     variables: JSON.stringify({
       id: '1814752244',
-      first: 10
+      first: 1
     })
   },
   json: true
