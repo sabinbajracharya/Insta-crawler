@@ -10,7 +10,7 @@ http({
     query_id: '17888483320059182',
     variables: JSON.stringify({
       id: '1814752244',
-      first: 1000
+      first: 10
     })
   },
   json: true
@@ -50,10 +50,14 @@ function parse (json) {
       continue
     }
 
-    const post = Post(
-      desc['node']['text'],
-      node['display_url']
-    )
+    const post = Post({
+      desc: desc['node']['text'], // description
+      url: node['display_url'], // post image url
+      like_count: node['edge_media_preview_like']['count'], // total like
+      comment_count: node['edge_media_to_comment']['count'], // total comment
+      post_id: node['shortcode'], // link to actual post
+      profile_id: node['owner']['id'] // profile id
+    })
 
     Posts.push(post)
   }

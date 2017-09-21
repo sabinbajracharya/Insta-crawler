@@ -1,11 +1,23 @@
-const Post = function (text = "No Text", display_url = null) {
+const Post = function (params) {
 
-  const _text = text
-  const _display_url = display_url
+  const defaults = {
+    desc: "No Description", // description
+    url: "", // post image url
+    like_count: 0, // total like
+    comment_count: 0, // total comment
+    post_id: null, // link to actual post
+    profile_id: null // profile id
+  }
+
+  const opts = Object.assign({}, defaults, params)
 
   return {
-    desc: _text,
-    display: _display_url
+    desc: opts.desc,
+    display: opts.url,
+    like: opts.like_count,
+    comment: opts.comment_count,
+    profile: opts.profile_id,
+    post: opts.post_id
   }
 
 }
