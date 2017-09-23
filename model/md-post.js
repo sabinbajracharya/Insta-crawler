@@ -16,7 +16,7 @@ const Post = function (params) {
   const opts = Object.assign({}, defaults, params)
 
   const generateTagsFromHash = () => {
-    const split = opts.desc.split(' ')
+    const split = opts.desc.replace( /↵/g, " " ).split(' ')
     const filterdDesc = [];
     const tags = split.filter((item) => {
       if (item[0] !== undefined && item[0] === '#') {
