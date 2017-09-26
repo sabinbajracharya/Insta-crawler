@@ -4,7 +4,7 @@ Fetches public instagram posts of a given username and stores it in Firebase and
 ### Prerequisite
 - Create firebase account (Free) - For storage
 - Create Algolia account (Free) - For powering search
-- Download firebase admin sdk private key (json file), rename it to ```serviceAccountKey.json``` and put in inside ```database``` folder along with ```firebase.js``` and ```insert.js```  
+- Download firebase admin sdk private key (json file), rename it to ```serviceAccountKey.json``` and put it inside ```database``` folder along with ```firebase.js``` and ```insert.js```  
 - Create ```.env``` file in the root of the cloned project
 
 | Content of .env file | Description |
@@ -23,4 +23,4 @@ Each values inside .env file should be added in a new line.
 - Run ```$ npm install```
 - Open index.js file and replace the value in ```USERNAME``` variable with the one you want to crawl.
 - ```$ node index.js```
-- That's it! - You can view the crawled data in fiebase database and algolia
+- That's it! - You can view the crawled data in firebase database and algolia
