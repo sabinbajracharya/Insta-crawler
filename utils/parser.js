@@ -10,8 +10,10 @@ module.exports.parseProfile = (json) => {
     followed_by: user.followed_by.count,
     follows: user.follows.count,
     is_verified: user.is_verified,
-    profile_pic_url: user.profile_pic_url_hd,
-    username: user.username
+    profile_pic_url: user.profile_pic_url,
+    profile_pic_hd_url: user.profile_pic_url_hd,
+    username: user.username,
+    total_posts: user.media.count
   })
   return profile
 }
@@ -43,7 +45,8 @@ module.exports.parsePosts = (json) => {
       like_count: node['edge_media_preview_like']['count'], // total like
       comment_count: node['edge_media_to_comment']['count'], // total comment
       post_id: node['shortcode'], // link to actual post
-      profile_id: node['owner']['id'] // profile id
+      profile_id: node['owner']['id'], // profile id,
+      timestamp: node['taken_at_timestamp']
     })
 
     Posts.push(post)
