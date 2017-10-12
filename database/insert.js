@@ -23,3 +23,27 @@ module.exports.insertOne = async function (data) {
 
   return data
 }
+
+module.exports.bulkUpdate = async function (data) {
+  const postsRef = db.ref('data')
+  const batch = {}
+  Object.keys(data).forEach(function(key) {
+    const pushId = postsRef.push().key
+    const itemValue = data[key]
+    batch[pushId] = itemValue;
+  });
+
+  const result = await postsRef.update(batch)
+  if(result === undefined||result === null) {
+    const objects = []
+    Object.keys(batch).forEach((key) => {
+      const itemValue = batch[key]
+      itemValue['objectID'] = key
+      objects.push(itemValue)
+    });
+    return objects
+  } else {
+    // if the result is not null then it is an error
+    return []
+  }
+}

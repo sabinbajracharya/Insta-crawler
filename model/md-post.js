@@ -1,4 +1,4 @@
-const Post = function (params) {
+const Post = function (params = {}) {
 
   const defaults = {
     name: '', // full name
@@ -44,7 +44,8 @@ const Post = function (params) {
     comment: opts.comment_count,
     profile: opts.profile_id,
     post: opts.post_id,
-    tags: opts.tags
+    tags: opts.tags,
+    timestamp: opts.timestamp
   }
 
 }

@@ -18,9 +18,8 @@ module.exports.parseProfile = (json) => {
   return profile
 }
 
-module.exports.parsePosts = (json) => {
+module.exports.parsePosts = (json, Posts = []) => {
   const Post = require('../model/md-post')
-  const Posts = []
   const edges = json['data']['user']['edge_owner_to_timeline_media']['edges']
   for (let i = edges.length - 1; i >= 0; i--) {
     const edge = edges[i]
